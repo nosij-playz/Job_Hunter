@@ -1,0 +1,49 @@
+# ── Python ──
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Personal / runtime data ──
+data/
+jobseeker/data/
+*.db
+*.sqlite
+*.sqlite3
+*.xlsx
+*.xls
+*.pdf
+
+# ── Logs ──
+*.log
+logs/
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Environment ──
+.env
+.env.local
+*.env
+
+# ── Playwright browsers (if ever installed locally) ──
+ms-playwright/

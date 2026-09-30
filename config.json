@@ -1,0 +1,303 @@
+{
+  "llm": {
+    "model": "gemma4:31b-cloud",
+    "host": "http://localhost:11434",
+    "batch_screen_size": 30,
+    "brain_enabled": true
+  },
+
+  "candidate": {
+    "cv_path": "data/CV.pdf",
+    "profile_cache": "data/profile.json",
+    "seniority": "fresher",
+    "years_experience": 1,
+    "target_level": "entry"
+  },
+
+  "thresholds": {
+    "min_score_to_shortlist": 70,
+    "min_score_to_apply": 80,
+    "min_score_to_cold": 65,
+    "max_applications_per_run": 0,
+    "quick_fit_min": 30,
+    "max_jobs_to_score": 800,
+    "min_description_length": 100
+  },
+
+  "auto_apply": false,
+  "export_top_n": 1500,
+  "headless": false,
+
+  "filters": {
+    "role_whitelist": [
+      "software engineer", "software developer", "sde",
+      "backend engineer", "backend developer",
+      "frontend engineer", "frontend developer",
+      "full stack", "fullstack", "full-stack",
+      "web developer", "web engineer",
+      "python developer", "python engineer",
+      "java developer", "java engineer",
+      "node developer", "node engineer",
+      "golang developer", "go developer",
+      "react developer", "react engineer",
+      "mobile developer", "android developer", "ios developer",
+      "application developer", "app developer",
+      "platform engineer", "infrastructure engineer",
+      "devops engineer", "cloud engineer",
+      "qa engineer", "test engineer", "automation engineer",
+      "site reliability", "sre",
+      "ai engineer", "ml engineer", "machine learning engineer",
+      "machine learning", "deep learning",
+      "data scientist", "data science",
+      "data engineer", "data analyst",
+      "genai", "generative ai", "llm engineer",
+      "nlp engineer", "computer vision engineer",
+      "ai developer", "ai researcher", "ai specialist",
+      "research engineer", "applied scientist",
+      "graduate engineer", "graduate software", "graduate developer",
+      "associate engineer", "associate software", "associate developer",
+      "junior engineer", "junior developer", "junior software",
+      "trainee engineer", "trainee developer", "trainee software",
+      "software engineer i", "software developer i",
+      "engineer i", "developer i",
+      "technology analyst", "technical analyst",
+      "systems engineer", "solutions engineer",
+      "product engineer"
+    ],
+
+    "seniority_reject": [
+      "senior", "sr.", "sr ", "staff", "principal", "lead ",
+      "manager", "director", "head of", "vp ", "vice president",
+      "chief", "architect", "distinguished", "fellow",
+      " iii", " iv", " v ", "6+ years", "5+ years", "8+ years",
+      "10+ years", "expert", "guru", "consultant ii"
+    ],
+
+    "seniority_boost": [
+      "fresher", "entry", "entry-level", "entry level", "junior", "jr.",
+      "graduate", "grad ", "new grad", "campus", "trainee",
+      "intern", "internship", "associate", "apprentice",
+      "engineer i", "engineer 1", "developer i", "analyst i",
+      "software engineer i", "sde 1", "sde-1", "sde i",
+      "0-2 years", "0-1 years", "1-2 years"
+    ],
+
+    "location_whitelist": [
+      "remote", "india", "bangalore", "bengaluru", "kochi", "cochin",
+      "hyderabad", "chennai", "pune", "mumbai", "anywhere",
+      "thiruvananthapuram", "trivandrum", "kozhikode", "calicut",
+      "coimbatore", "mysore", "mangalore", "madurai", "trichy",
+      "vijayawada", "visakhapatnam", "puducherry",
+      "delhi", "noida", "gurgaon", "ncr", "ahmedabad"
+    ],
+
+    "title_exclude_keywords": [
+      "sales", "marketing", "recruiter", "recruiting", "hr ",
+      "human resources", "talent acquisition", "business development",
+      "account manager", "account executive", "customer success",
+      "customer support", "customer service", "technical support",
+      "product manager", "product owner", "product designer",
+      "ux designer", "ui designer", "graphic designer",
+      "content writer", "copywriter", "seo ", "social media",
+      "finance", "accounting", "legal", "operations manager",
+      "office manager", "admin", "executive assistant"
+    ],
+
+    "company_blacklist": [
+      "crossover", "turing", "toptal", "upwork",
+      "revature", "smoothstack", "cognizant", "infosys",
+      "wipro", "tcs", "hcl", "tech mahindra", "mphasis",
+      "capgemini", "accenture", "deloitte", "ey", "kpmg", "pwc"
+    ]
+  },
+
+  "location_priority": {
+    "tier_1_core": {
+      "priority": 100,
+      "cities": [
+        "kochi", "cochin", "ernakulam", "thiruvananthapuram", "trivandrum",
+        "kozhikode", "calicut", "thrissur", "kollam", "kottayam",
+        "bangalore", "bengaluru", "bengaluru urban"
+      ]
+    },
+    "tier_2_south": {
+      "priority": 85,
+      "cities": [
+        "chennai", "hyderabad", "coimbatore", "mysore", "mysuru",
+        "mangalore", "mangaluru", "madurai", "trichy", "tiruchirappalli",
+        "vijayawada", "visakhapatnam", "vizag", "warangal",
+        "puducherry", "pondicherry", "salem", "tirupati", "nellore"
+      ]
+    },
+    "tier_3_india_remote": {
+      "priority": 70,
+      "cities": [
+        "india", "remote - india", "remote india", "remote (india)",
+        "pune", "mumbai", "delhi", "noida", "gurgaon", "gurugram",
+        "ncr", "ahmedabad", "jaipur", "indore"
+      ]
+    },
+    "tier_4_global_remote": {
+      "priority": 45,
+      "cities": [
+        "remote", "anywhere", "worldwide", "global", "work from anywhere"
+      ]
+    }
+  },
+
+  "sources": {
+    "remoteok": { "enabled": true },
+    "arbeitnow": { "enabled": true, "pages": 3 },
+    "remotive": { "enabled": true, "limit": 100 },
+    "himalayas": { "enabled": true },
+    "working_nomads": { "enabled": true },
+    "weworkremotely": { "enabled": true },
+    "jobicy": { "enabled": true },
+    "hn_whoishiring": { "enabled": true },
+    "recruitee": {
+      "enabled": true,
+      "companies": ["personio", "wearedevelopers", "wefox", "forto", "solarisbank"]
+    },
+    "smartrecruiters": {
+      "enabled": true,
+      "companies": ["Visa", "Bosch", "McDonalds", "LinkedIn", "Ubisoft"]
+    },
+    "greenhouse": {
+      "enabled": true,
+      "companies": [
+        "postman", "razorpay", "cred", "zepto", "groww",
+        "gitlab", "hashicorp", "docker", "cloudflare", "sentry",
+        "vercel", "supabase", "linear", "retool", "airtable",
+        "hackerrank", "zapier", "asana", "atlassian", "browserstack",
+        "phonepe", "meesho", "swiggy", "zomato", "ola",
+        "druva", "innovaccer", "darwinbox", "mindtickle", "whatfix",
+        "freshworks", "zoho", "chargebee", "hasura",
+        "five9", "sarvam-ai", "krutrim", "yellow-ai", "nirmata",
+        "atlan", "zeta", "fyle", "kai-os", "hackerearth",
+        "darwinbox", "innovaccer", "mindtickle", "puresoftware",
+        "thoughtworks", "valtech", "kissflow", "techjini", "nilgai",
+        "six30labs", "innoventes", "netobjex", "khosla-labs", "zolvit",
+        "skit", "yellow-messenger", "pando", "wysa", "ekincare",
+        "healthify", "cultfit", "curefit", "lenskart", "nykaa",
+        "bigbasket", "dunzo", "urban-company", "porter", "ninjacart",
+        "waycool", "dehaat", "samunnati", "faarms", "bijak",
+        "gramophone", "absolute-foods", "vahak", "zepto", "blinkit",
+        "swiggy-instamart", "dunzo-daily", "country-delight", "bounce",
+        "yulu", "chalo", "namma-yatri", "quickride", "khatabook",
+        "okcredit", "vyapar", "khata-book", "innov8", "awfis",
+        "cowrks", "wework-india", "91springboard",
+        "stripe", "coinbase", "robinhood", "reddit", "discord",
+        "doordash", "instacart", "airbnb", "shopify", "spotify",
+        "databricks", "snowflake", "mongodb", "elastic", "datadog",
+        "twilio", "sendgrid", "notion", "figma", "canva", "miro",
+        "lyft", "uber", "booking", "tripadvisor", "expedia",
+        "paytm", "byjus", "unacademy", "upgrad", "vedantu",
+        "dream11", "games24x7", "myntra", "flipkart", "snapdeal",
+        "samsung", "siemens", "bosch", "philips", "abbott",
+        "hackerone", "bugcrowd", "auth0", "okta", "1password",
+        "benchling", "ramp", "plaid", "brex", "gusto", "rippling",
+        "carta", "chime", "affirm", "marqeta", "revolut",
+        "contentful", "strapi", "sanity", "prismic",
+        "amplitude", "mixpanel", "posthog", "heap", "segment",
+        "intercom", "zendesk", "freshdesk", "front", "drift",
+        "github", "sourcegraph", "replit", "codesandbox", "stackblitz",
+        "harness", "circleci", "travis-ci", "buildkite", "codefresh",
+        "pagerduty", "opsgenie", "splunk", "sumo-logic", "grafana",
+        "clickhouse", "influxdata", "timescale", "cockroachdb", "yugabyte",
+        "confluent", "redpanda", "materialize", "estuary", "airbyte",
+        "dbt-labs", "fivetran", "segment", "hightouch", "census",
+        "retool", "appsmith", "budibase", "tooljet", "forest-admin",
+        "planetscale", "neon", "supabase", "turso", "xata",
+        "render", "fly", "railway", "heroku", "netlify",
+        "deno", "bun", "node", "prisma", "hasura",
+        "clerk", "auth0", "stytch", "workos", "superTokens",
+        "resend", "postmark", "sendinblue", "mailgun", "sparkpost",
+        "cal.com", "calendly", "savvycal", "tidycal",
+        "loom", "mmhmm", "descript", "veed", "kapwing",
+        "miro", "mural", "excalidraw", "whimsical", "lucid",
+        "plane", "linear", "height", "shortcut", "clickup",
+        "todoist", "ticktick", "things", "omnifocus", "sunsama"
+      ]
+    },
+    "lever": {
+      "enabled": true,
+      "companies": [
+        "freshworks", "zoho", "chargebee", "hasura", "setu",
+        "jupiter", "slice", "fi", "darwinbox", "whatfix",
+        "kunai", "nutanix", "glance", "inmobi",
+        "netflix", "spotify", "shopify", "plaid", "ramp", "brex",
+        "coinbase", "robinhood", "figma", "notion", "vercel",
+        "docker", "gitlab", "hashicorp", "cloudflare", "sentry",
+        "stripe", "airbnb", "lyft", "uber", "doordash",
+        "atlassian", "asana", "canva", "miro", "figma",
+        "razorpay", "cred", "groww", "zepto", "phonepe",
+        "byjus", "unacademy", "meesho", "swiggy", "zomato",
+        "myntra", "flipkart", "dream11", "games24x7",
+        "techmahindra", "wipro", "hcl", "infosys", "tcs",
+        "mphasis", "mindtree", "ltts", "persistent", "birlasoft",
+        "cognizant", "accenture", "capgemini", "deloitte", "ey",
+        "puresoftware", "thoughtworks", "techjini", "kissflow",
+        "freshworks", "zoho", "chargebee", "hasura",
+        "innoventes", "netobjex", "khosla-labs", "zolvit",
+        "lenskart", "nykaa", "urban-company", "porter",
+        "ninjacart", "dehaat", "vahak", "gramophone"
+      ]
+    },
+    "ashby": {
+      "enabled": true,
+      "companies": [
+        "linear", "ramp", "vanta", "mercury", "clay",
+        "loom", "deel", "census", "hex", "rutter",
+        "sarvam", "krutrim", "atlan", "zeta", "polymerize",
+        "openai", "anthropic", "cohere", "perplexity", "mistral",
+        "huggingface", "weights-biases", "scale", "labelbox", "snorkel",
+        "pinecone", "weaviate", "qdrant", "chroma", "lancedb",
+        "langchain", "llamaindex", "crewai", "autogen", "fixie",
+        "modal", "replicate", "banana", "together", "fireworks",
+        "baseten", "beam", "runpod", "coreweave", "lambda"
+      ]
+    },
+    "workable": {
+      "enabled": true,
+      "companies": [
+        "hotjar", "mixpanel", "typeform", "pleo", "personio",
+        "kai-os", "fyle", "hackerearth",
+        "buffer", "doist", "automattic", "gitlab", "zapier",
+        "convertkit", "convertkit", "teachable", "thinkific", "kajabi",
+        "podia", "gumroad", "substack", "ghost", "medium",
+        "patreon", "ko-fi", "buymeacoffee", "stripe", "paddle",
+        "lemonsqueezy", "chargebee", "recurly", "chargeover", "zoho"
+      ]
+    }
+  },
+
+  "company_priority": {
+    "default": 50,
+    "overrides": {
+      "cred": 100, "zepto": 100, "slice": 100, "jupiter": 100, "fi": 100,
+      "setu": 100, "hasura": 100, "linear": 100, "supabase": 100,
+      "vercel": 100, "retool": 100, "railway": 100, "neon": 100,
+      "clerk": 100, "resend": 100, "cal.com": 100, "plane": 100,
+      "formbricks": 100, "twenty": 100, "documenso": 100,
+      "groww": 90, "druva": 90, "browserstack": 90, "chargebee": 90,
+      "postman": 90, "sentry": 90, "hackerrank": 90, "zapier": 90,
+      "freshworks": 95, "zoho": 95, "razorpay": 90, "darwinbox": 90,
+      "whatfix": 90, "innovaccer": 90, "mindtickle": 85,
+      "sarvam-ai": 100, "krutrim": 100, "yellow-ai": 100,
+      "atlan": 95, "zeta": 90, "glance": 85, "inmobi": 85,
+      "hackerearth": 90, "fyle": 90, "kai-os": 90,
+      "gitlab": 70, "hashicorp": 70, "docker": 70, "cloudflare": 65,
+      "notion": 60, "figma": 60, "airtable": 60, "asana": 55,
+      "atlassian": 50, "stripe": 40, "coinbase": 40, "robinhood": 40,
+      "airbnb": 35, "instacart": 35, "reddit": 30, "discord": 30,
+      "doordash": 30, "netflix": 20, "plaid": 40, "ramp": 40,
+      "brex": 40, "spotify": 30
+    }
+  },
+
+  "output": {
+    "applied_xlsx": "data/applied.xlsx",
+    "cold_xlsx": "data/cold_outreach.xlsx",
+    "db_path": "data/jobs.db"
+  }
+}
