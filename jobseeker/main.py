@@ -41,7 +41,9 @@ async def main():
 
     # ── 2. Deep discovery ──
     print("\n[2/5] Deep scan across all sources...")
+    print("      (this includes LinkedIn guest API + startup boards — may take 2-4 min)")
     jobs = discover(cfg)
+    print(f"      Sources done. Raw jobs: {len(jobs)}")
 
     # Naukri (South India focused) — must run in async context
     try:

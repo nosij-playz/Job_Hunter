@@ -88,7 +88,8 @@
       "thiruvananthapuram", "trivandrum", "kozhikode", "calicut",
       "coimbatore", "mysore", "mangalore", "madurai", "trichy",
       "vijayawada", "visakhapatnam", "puducherry",
-      "delhi", "noida", "gurgaon", "ncr", "ahmedabad"
+      "delhi", "noida", "gurgaon", "ncr", "ahmedabad",
+      "linkedin", "cutshort", "instahyre", "wellfound"
     ],
 
     "title_exclude_keywords": [
@@ -149,6 +150,33 @@
     "remoteok": { "enabled": true },
     "arbeitnow": { "enabled": true, "pages": 3 },
     "remotive": { "enabled": true, "limit": 100 },
+    "linkedin": {
+      "enabled": true,
+      "max_results_per_search": 75,
+      "fetch_details": false,
+      "searches": [
+        { "keywords": "fresher software engineer",  "location": "India",  "f_tpr": "r3600",  "f_e": "2,3" },
+        { "keywords": "junior python developer",    "location": "India",  "f_tpr": "r86400", "f_e": "2,3" },
+        { "keywords": "entry level AI engineer",    "location": "India",  "f_tpr": "r86400", "f_e": "2,3" },
+        { "keywords": "trainee software engineer",  "location": "India",  "f_tpr": "r86400", "f_e": "2,3" },
+        { "keywords": "software engineer",          "location": "Kochi",  "f_tpr": "r86400", "f_e": "2,3" },
+        { "keywords": "software engineer",          "location": "Bangalore", "f_tpr": "r86400", "f_e": "2,3" },
+        { "keywords": "software engineer",          "location": "Chennai",   "f_tpr": "r86400", "f_e": "2,3" },
+        { "keywords": "software engineer",          "location": "Hyderabad","f_tpr": "r86400", "f_e": "2,3" }
+      ]
+    },
+    "startups": {
+      "enabled": true,
+      "cutshort": true,
+      "instahyre": true,
+      "wellfound": true,
+      "max_results_per_keyword": 40,
+      "keywords": [
+        "software engineer", "python developer", "ai engineer",
+        "machine learning", "full stack developer", "data scientist"
+      ],
+      "cities": ["bangalore", "kochi", "chennai", "hyderabad"]
+    },
     "himalayas": { "enabled": true },
     "working_nomads": { "enabled": true },
     "weworkremotely": { "enabled": true },
@@ -291,7 +319,8 @@
       "atlassian": 50, "stripe": 40, "coinbase": 40, "robinhood": 40,
       "airbnb": 35, "instacart": 35, "reddit": 30, "discord": 30,
       "doordash": 30, "netflix": 20, "plaid": 40, "ramp": 40,
-      "brex": 40, "spotify": 30
+      "brex": 40, "spotify": 30, "cutshort": 90, "instahyre": 90,
+      "wellfound": 88, "linkedin": 85
     }
   },
 

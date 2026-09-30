@@ -399,6 +399,30 @@ def discover(cfg):
             print(f"      → {label.title()} ({len(slugs)}) [parallel]...")
             all_jobs += _ats_parallel(fn, slugs, label, cfg)
 
+    # ── LinkedIn (guest API) ──
+    try:
+        from jobseeker.scrapers_linkedin import fetch_linkedin
+        if src.get("linkedin", {}).get("enabled"):
+            print("      → LinkedIn (guest API)...")
+            li_jobs = fetch_linkedin(cfg)
+            for j in li_jobs:
+                j["source"] = "linkedin"
+            all_jobs += [_norm(j, "linkedin", cfg) for j in li_jobs]
+            print(f"      [linkedin] total: {len(li_jobs)}")
+    except Exception as e:
+        print(f"      [linkedin] skipped: {e}")
+
+    # ── Startups (Cutshort / Instahyre / Wellfound) ──
+    try:
+        from jobseeker.scrapers_startups import fetch_startups
+        if src.get("startups", {}).get("enabled"):
+            print("      → Startup boards (Cutshort / Instahyre / Wellfound)...")
+            st_jobs = fetch_startups(cfg)
+            all_jobs += [_norm(j, j.get("source", "startup"), cfg) for j in st_jobs]
+            print(f"      [startups] total: {len(st_jobs)}")
+    except Exception as e:
+        print(f"      [startups] skipped: {e}")
+
     try:
         from jobseeker.scrapers_more import (
             himalayas, working_nomads, weworkremotely,
