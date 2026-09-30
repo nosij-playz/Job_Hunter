@@ -424,6 +424,26 @@ def discover(cfg):
         print(f"      [startups] skipped: {e}")
 
     try:
+        from jobseeker.scrapers_tier1 import fetch_tier1
+        if src.get("tier1", {}).get("enabled"):
+            print("      → Tier 1 (FAANG direct APIs)...")
+            t1_jobs = fetch_tier1(cfg)
+            all_jobs += [_norm(j, j.get("source", "tier1"), cfg) for j in t1_jobs]
+            print(f"      [tier1] total: {len(t1_jobs)}")
+    except Exception as e:
+        print(f"      [tier1] skipped: {e}")
+
+    try:
+        from jobseeker.scrapers_sme import fetch_sme
+        if src.get("sme", {}).get("enabled"):
+            print("      → SME boards (Hasjob / HackerEarth)...")
+            sm_jobs = fetch_sme(cfg)
+            all_jobs += [_norm(j, j.get("source", "sme"), cfg) for j in sm_jobs]
+            print(f"      [sme] total: {len(sm_jobs)}")
+    except Exception as e:
+        print(f"      [sme] skipped: {e}")
+
+    try:
         from jobseeker.scrapers_more import (
             himalayas, working_nomads, weworkremotely,
             jobicy, hn_whoishiring, recruitee, smartrecruiters,

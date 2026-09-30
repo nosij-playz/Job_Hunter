@@ -177,6 +177,21 @@
       ],
       "cities": ["bangalore", "kochi", "chennai", "hyderabad"]
     },
+    "tier1": {
+      "enabled": true,
+      "amazon": true,
+      "microsoft": true,
+      "google": true,
+      "apple": true,
+      "keywords": ["software engineer", "software development engineer", "machine learning"],
+      "max_results_per_keyword": 30
+    },
+    "sme": {
+      "enabled": true,
+      "hasjob": true,
+      "hackerearth": true,
+      "max_results": 50
+    },
     "himalayas": { "enabled": true },
     "working_nomads": { "enabled": true },
     "weworkremotely": { "enabled": true },
