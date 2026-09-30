@@ -129,8 +129,7 @@ def _preflight(_any):
 
 @app.route("/")
 def root():
-	if INDEX_HTML.exists():
-		return send_file(str(INDEX_HTML))
+	
 	return f"Job Hunter API v{VERSION}\n", 200, {"Content-Type": "text/plain; charset=utf-8"}
 
 
@@ -290,6 +289,31 @@ def api_download():
 		download_name="applied.xlsx",
 		mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 	)
+
+
+@app.route("/api/clear-excel", methods=["POST"])
+@app.route("/api/clear_excel", methods=["POST"])
+def api_clear_excel():
+	"""Delete only the current Excel workbook."""
+	with LOCK:
+		if STATE["running"]:
+			return jsonify({"error": "Stop the pipeline first"}), 409
+
+	deleted = []
+	try:
+		if EXCEL_PATH.exists():
+			EXCEL_PATH.unlink()
+			deleted.append(EXCEL_PATH.name)
+	except Exception as exc:
+		return jsonify({"error": f"failed to delete {EXCEL_PATH.name}: {exc}"}), 500
+
+	with LOCK:
+		STATE["excel_ready"] = False
+		STATE["exit_code"] = None
+		STATE["finished_at"] = None
+		STATE["last_error"] = None
+
+	return jsonify({"ok": True, "deleted": deleted})
 
 
 @app.route("/api/clear", methods=["POST"])
