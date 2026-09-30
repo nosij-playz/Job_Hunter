@@ -1,5 +1,6 @@
 """Excel-first job hunter: deep scan, no auto-apply, sorted output."""
 import asyncio
+import argparse
 import json
 import os
 import sys
@@ -17,14 +18,39 @@ from jobseeker.core import (
     make_cold_email, extract_contacts,
     brain_screen_titles, quick_fit_score,
 )
-from jobseeker.scrapers import discover
+from jobseeker.scrapper.scrapers import discover
 from jobseeker.exporter import export_all
 
 
-async def main():
+def apply_runtime_tuning(cfg, fast=False):
+    llm_cfg = cfg.setdefault("llm", {})
+    thresholds = cfg.setdefault("thresholds", {})
+
+    if fast:
+        llm_cfg["brain_enabled"] = False
+        llm_cfg["batch_screen_size"] = thresholds.get("batch_screen_size_fast", llm_cfg.get("batch_screen_size", 16))
+        thresholds["quick_fit_min"] = thresholds.get("quick_fit_min_fast", thresholds.get("quick_fit_min", 35))
+        thresholds["max_jobs_to_score"] = thresholds.get("max_jobs_to_score_fast", thresholds.get("max_jobs_to_score", 260))
+        thresholds["min_description_length"] = thresholds.get("min_description_length_fast", thresholds.get("min_description_length", 120))
+        print("[runtime] Fast mode enabled: smaller scoring pool, no brain screen")
+    else:
+        llm_cfg["batch_screen_size"] = llm_cfg.get("batch_screen_size", 24)
+        thresholds["quick_fit_min"] = thresholds.get("quick_fit_min", 35)
+        thresholds["max_jobs_to_score"] = thresholds.get("max_jobs_to_score", 260)
+        thresholds["min_description_length"] = thresholds.get("min_description_length", 120)
+
+    return cfg
+
+
+async def main(fast=False, refresh_discovery=False):
     cfg = load_config()
+    cfg = apply_runtime_tuning(cfg, fast=fast)
     print("=" * 60)
     print("JOB HUNTER — Deep Scan → Sorted Excel")
+    if fast:
+        print("MODE: FAST")
+    else:
+        print("MODE: FULL")
     print("=" * 60)
 
     llm = LLM(cfg["llm"]["model"], cfg["llm"]["host"])
@@ -39,15 +65,27 @@ async def main():
     profile = parse_cv(llm, cfg["candidate"]["cv_path"], cfg["candidate"]["profile_cache"])
     print(f"      {profile.get('name')} | {len(profile.get('skills', []))} skills")
 
+    # ── 1.5. Dynamic company discovery ──
+    try:
+        from jobseeker.scrapper.scrapers_discovery import discover_and_cache, merge_into_config
+        print("\n[1.5] Dynamic company discovery...")
+        discover_and_cache(force=refresh_discovery)
+        cfg = merge_into_config(cfg)
+        greenhouse_count = len(cfg["sources"].get("greenhouse", {}).get("companies", []))
+        lever_count = len(cfg["sources"].get("lever", {}).get("companies", []))
+        print(f"      Config now has {greenhouse_count} greenhouse + {lever_count} lever slugs")
+    except Exception as e:
+        print(f"      [discovery] skipped: {str(e)[:120]}")
+
     # ── 2. Deep discovery ──
     print("\n[2/5] Deep scan across all sources...")
-    print("      (this includes LinkedIn guest API + startup boards — may take 2-4 min)")
+    print("      (this includes LinkedIn guest API + startup boards + dynamic discovery — may take 2-4 min)")
     jobs = discover(cfg)
     print(f"      Sources done. Raw jobs: {len(jobs)}")
 
     # Naukri (South India focused) — must run in async context
     try:
-        from jobseeker.scrapers_india import naukri_async
+        from jobseeker.scrapper.scrapers_india import naukri_async
         print("      → Naukri (South India focused)...")
         naukri_jobs = await naukri_async(cfg)
         print(f"      Naukri added: {len(naukri_jobs)}")
@@ -161,4 +199,8 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    parser = argparse.ArgumentParser(description="Job hunter pipeline")
+    parser.add_argument("--fast", action="store_true", help="skip full brain screen and reduce scoring volume")
+    parser.add_argument("--refresh-discovery", action="store_true", help="force a fresh ATS/company discovery cache")
+    args = parser.parse_args()
+    asyncio.run(main(fast=args.fast, refresh_discovery=args.refresh_discovery))

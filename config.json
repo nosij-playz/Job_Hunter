@@ -2,7 +2,7 @@
   "llm": {
     "model": "gemma4:31b-cloud",
     "host": "http://localhost:11434",
-    "batch_screen_size": 30,
+    "batch_screen_size": 24,
     "brain_enabled": true
   },
 
@@ -19,9 +19,13 @@
     "min_score_to_apply": 80,
     "min_score_to_cold": 65,
     "max_applications_per_run": 0,
-    "quick_fit_min": 30,
-    "max_jobs_to_score": 800,
-    "min_description_length": 100
+    "quick_fit_min": 35,
+    "max_jobs_to_score": 260,
+    "min_description_length": 120,
+    "max_jobs_to_score_fast": 160,
+    "quick_fit_min_fast": 42,
+    "min_description_length_fast": 140,
+    "batch_screen_size_fast": 16
   },
 
   "auto_apply": false,
@@ -150,6 +154,60 @@
     "remoteok": { "enabled": true },
     "arbeitnow": { "enabled": true, "pages": 3 },
     "remotive": { "enabled": true, "limit": 100 },
+    "metro": {
+      "enabled": true,
+      "cities": ["bangalore", "chennai", "kochi", "trivandrum", "hyderabad", "coimbatore"],
+      "companies": [
+        { "name": "Freshworks", "website": "https://www.freshworks.com", "cities": ["chennai", "bangalore"] },
+        { "name": "Zoho", "website": "https://www.zoho.com", "cities": ["chennai", "bangalore"] },
+        { "name": "Razorpay", "website": "https://razorpay.com", "cities": ["bangalore"] },
+        { "name": "CRED", "website": "https://cred.club", "cities": ["bangalore"] },
+        { "name": "Zepto", "website": "https://www.zeptonow.com", "cities": ["bangalore"] },
+        { "name": "Groww", "website": "https://groww.in", "cities": ["bangalore"] },
+        { "name": "Postman", "website": "https://www.postman.com", "cities": ["bangalore"] },
+        { "name": "PhonePe", "website": "https://www.phonepe.com", "cities": ["bangalore"] },
+        { "name": "Swiggy", "website": "https://www.swiggy.com", "cities": ["bangalore"] },
+        { "name": "Zomato", "website": "https://www.zomato.com", "cities": ["bangalore"] },
+        { "name": "Meesho", "website": "https://www.meesho.io", "cities": ["bangalore"] },
+        { "name": "Dream11", "website": "https://www.dream11.com", "cities": ["bangalore"] },
+        { "name": "Flipkart", "website": "https://www.flipkart.com", "cities": ["bangalore"] },
+        { "name": "Myntra", "website": "https://www.myntra.com", "cities": ["bangalore"] },
+        { "name": "Darwinbox", "website": "https://darwinbox.com", "cities": ["hyderabad"] },
+        { "name": "Innovaccer", "website": "https://innovaccer.com", "cities": ["noida"] },
+        { "name": "Whatfix", "website": "https://whatfix.com", "cities": ["bangalore"] },
+        { "name": "Hasura", "website": "https://hasura.io", "cities": ["bangalore"] },
+        { "name": "Chargebee", "website": "https://www.chargebee.com", "cities": ["chennai"] },
+        { "name": "Fyle", "website": "https://www.fylehq.com", "cities": ["bangalore"] },
+        { "name": "Druva", "website": "https://www.druva.com", "cities": ["pune", "bangalore"] },
+        { "name": "BrowserStack", "website": "https://www.browserstack.com", "cities": ["mumbai", "bangalore"] }
+      ]
+    },
+    "kerala": {
+      "enabled": true,
+      "companies": [
+        { "name": "IBS Software", "website": "https://www.ibsplc.com", "city": "Kochi", "phone": "+91-484-410-1000" },
+        { "name": "UST Global", "website": "https://www.ust.com", "city": "Trivandrum" },
+        { "name": "NeST Digital", "website": "https://www.nestdigital.com", "city": "Kochi" },
+        { "name": "Speridian Tech", "website": "https://www.speridian.com", "city": "Trivandrum" },
+        { "name": "SunTec Business", "website": "https://www.suntecgroup.com", "city": "Trivandrum" },
+        { "name": "Vanenburg", "website": "https://www.vanenburg.com", "city": "Kochi" },
+        { "name": "RapidValue", "website": "https://www.rapidvaluesolutions.com", "city": "Kochi" },
+        { "name": "Sysbiz Technologies", "website": "https://www.sysbiztechnologies.com", "city": "Kochi" },
+        { "name": "Datamatics", "website": "https://www.datamatics.com", "city": "Kochi" },
+        { "name": "Beegle", "website": "https://beegle.io", "city": "Kochi" },
+        { "name": "Orion Innovation", "website": "https://www.orioninc.com", "city": "Kochi" },
+        { "name": "Sutherland", "website": "https://www.sutherlandglobal.com", "city": "Kochi" },
+        { "name": "Tata Elxsi", "website": "https://www.tataelxsi.com", "city": "Trivandrum" },
+        { "name": "Nissan Digital", "website": "https://www.nissan-digital.com", "city": "Trivandrum" },
+        { "name": "Infosys", "website": "https://www.infosys.com", "city": "Trivandrum" },
+        { "name": "TCS", "website": "https://www.tcs.com", "city": "Trivandrum" },
+        { "name": "HCL", "website": "https://www.hcltech.com", "city": "Trivandrum" },
+        { "name": "Mphasis", "website": "https://www.mphasis.com", "city": "Trivandrum" },
+        { "name": "Allianz", "website": "https://www.allianz.com", "city": "Trivandrum" },
+        { "name": "RR Donnelley", "website": "https://www.rrdonnelley.com", "city": "Trivandrum" },
+        { "name": "Kerala Startup Mission", "website": "https://startupmission.kerala.gov.in", "city": "Trivandrum" }
+      ]
+    },
     "linkedin": {
       "enabled": true,
       "max_results_per_search": 75,

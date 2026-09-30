@@ -43,7 +43,7 @@ LOCK = threading.Lock()
 MAX_LOGS = 8000
 
 
-def _run_pipeline():
+def _run_pipeline(fast=False, refresh_discovery=False):
 	with LOCK:
 		STATE.update({
 			"running": True,
@@ -66,6 +66,10 @@ def _run_pipeline():
 	else:
 		cmd = [sys.executable, "main.py"]
 		cwd = str(PKG)
+	if fast:
+		cmd.append("--fast")
+	if refresh_discovery:
+		cmd.append("--refresh-discovery")
 
 	try:
 		proc = subprocess.Popen(
@@ -217,6 +221,9 @@ def api_results():
 			{col: (row[i] if i < len(row) else None) for i, col in enumerate(columns)}
 			for row in rows_iter
 		]
+		exclude_applied = request.args.get("exclude_applied", "true").lower() == "true"
+		if exclude_applied:
+			rows = [row for row in rows if (row.get("Status") or "").lower() != "applied"]
 		wb.close()
 		return jsonify({"sheet": sheet_name, "columns": columns, "rows": rows})
 	except Exception as exc:
@@ -253,13 +260,30 @@ def api_jobs():
 		return jsonify({"error": str(exc), "rows": [], "count": 0}), 500
 
 
-@app.route("/api/run", methods=["POST"])
-def api_run():
+def _start_run(fast=False, refresh_discovery=False):
 	with LOCK:
 		if STATE["running"]:
 			return jsonify({"error": "Pipeline already running"}), 409
-	threading.Thread(target=_run_pipeline, daemon=True).start()
+	threading.Thread(target=_run_pipeline, kwargs={"fast": fast, "refresh_discovery": refresh_discovery}, daemon=True).start()
 	return jsonify({"ok": True, "message": "Pipeline started"})
+
+
+@app.route("/api/run", methods=["POST"])
+def api_run():
+	payload = request.get_json(silent=True) or {}
+	fast = bool(payload.get("fast") or request.args.get("fast", "").lower() in {"1", "true", "yes"})
+	refresh = bool(payload.get("refresh_discovery") or request.args.get("refresh_discovery", "").lower() in {"1", "true", "yes"})
+	return _start_run(fast=fast, refresh_discovery=refresh)
+
+
+@app.route("/api/run-fast", methods=["POST"])
+def api_run_fast():
+	return _start_run(fast=True)
+
+
+@app.route("/api/refresh-discovery", methods=["POST"])
+def api_refresh_discovery():
+	return _start_run(refresh_discovery=True)
 
 
 @app.route("/api/stop", methods=["POST"])
@@ -347,6 +371,63 @@ def api_clear():
 		STATE["last_error"] = None
 
 	return jsonify({"ok": True, "deleted": deleted})
+
+
+@app.route("/api/mark-applied", methods=["POST"])
+def api_mark_applied():
+	"""Mark a job as applied. Requires {url}."""
+	body = request.get_json(silent=True) or {}
+	url = body.get("url")
+	if not url:
+		return jsonify({"error": "missing url"}), 400
+	if not DB_PATH.exists():
+		return jsonify({"error": "DB not found"}), 404
+	try:
+		with sqlite3.connect(str(DB_PATH)) as conn:
+			conn.execute(
+				"UPDATE jobs SET status='applied', applied_at=?, applied_date=? WHERE url=?",
+				(time.strftime("%Y-%m-%dT%H:%M:%S"), time.strftime("%Y-%m-%d"), url),
+			)
+		return jsonify({"ok": True, "url": url})
+	except Exception as exc:
+		return jsonify({"error": str(exc)}), 500
+
+
+@app.route("/api/unmark-applied", methods=["POST"])
+def api_unmark_applied():
+	"""Revert a job back to shortlisted. Requires {url}."""
+	body = request.get_json(silent=True) or {}
+	url = body.get("url")
+	if not url:
+		return jsonify({"error": "missing url"}), 400
+	if not DB_PATH.exists():
+		return jsonify({"error": "DB not found"}), 404
+	try:
+		with sqlite3.connect(str(DB_PATH)) as conn:
+			conn.execute(
+				"UPDATE jobs SET status='shortlisted', applied_at=NULL, applied_date=NULL WHERE url=?",
+				(url,),
+			)
+		return jsonify({"ok": True, "url": url})
+	except Exception as exc:
+		return jsonify({"error": str(exc)}), 500
+
+
+@app.route("/api/applied")
+def api_applied():
+	"""Return all applied jobs, newest first."""
+	if not DB_PATH.exists():
+		return jsonify({"rows": [], "count": 0})
+	try:
+		with sqlite3.connect(str(DB_PATH)) as conn:
+			conn.row_factory = sqlite3.Row
+			rows = [dict(row) for row in conn.execute(
+				"SELECT * FROM jobs WHERE status='applied' "
+				"ORDER BY COALESCE(applied_at, applied_date) DESC"
+			).fetchall()]
+		return jsonify({"rows": rows, "count": len(rows)})
+	except Exception as exc:
+		return jsonify({"error": str(exc), "rows": [], "count": 0}), 500
 
 
 if __name__ == "__main__":

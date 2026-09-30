@@ -153,7 +153,9 @@ WANTED_COLUMNS = {
     "matched_skills": "TEXT", "missing_skills": "TEXT",
     "reason": "TEXT", "cover_letter": "TEXT", "cold_email": "TEXT",
     "status": "TEXT DEFAULT 'new'",
-    "applied_date": "TEXT", "notes": "TEXT", "created_at": "TEXT",
+    "applied_date": "TEXT", "applied_at": "TEXT",
+    "company_phone": "TEXT", "company_email": "TEXT",
+    "notes": "TEXT", "created_at": "TEXT",
 }
 
 
@@ -429,17 +431,33 @@ JD: {(job.get('description') or '')[:700]}
 # CONTACT EXTRACTION
 # ─────────────────────────────────────────────────────────────
 EMAIL_RE = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}")
-PHONE_RE = re.compile(r"(?:\+\d{1,3}[\s\-]?)?(?:\(?\d{3,5}\)?[\s\-]?)?\d{3,5}[\s\-]?\d{3,5}")
+PHONE_IN_MOBILE = re.compile(r"(?:(?:\+|00)91[\s\-]?)?[6-9]\d{9}")
+PHONE_INTL = re.compile(r"\+\d{1,3}[\s\-]?\d{6,12}")
+PHONE_LANDLINE = re.compile(r"(?:(?:\+|00)91[\s\-]?)?\d{2,4}[\s\-]?\d{6,8}")
 
 
 def extract_contacts(text):
+    """Return the best public email and phone found in arbitrary text."""
     if not text:
         return None, None
     emails = EMAIL_RE.findall(text)
-    phones = [p for p in PHONE_RE.findall(text) if len(re.sub(r"\D", "", p)) >= 10]
-    if emails:
-        priority = sorted(emails, key=lambda e: (
-            0 if any(k in e.lower() for k in ("hr@", "careers@", "talent@", "jobs@", "recruit")) else 1
-        ))
-        return priority[0], (phones[0] if phones else None)
-    return None, (phones[0] if phones else None)
+
+    def rank(email):
+        value = email.lower()
+        if any(k in value for k in ("hr@", "careers@", "talent@", "jobs@", "recruit", "hiring@")):
+            return 0
+        if "noreply" in value or "no-reply" in value:
+            return 2
+        return 1
+
+    best_email = sorted(emails, key=rank)[0] if emails else None
+    candidates = PHONE_IN_MOBILE.findall(text) + PHONE_INTL.findall(text) + PHONE_LANDLINE.findall(text)
+    seen = set()
+    best_phone = None
+    for phone in candidates:
+        digits = re.sub(r"\D", "", phone)
+        if 10 <= len(digits) <= 13 and digits not in seen:
+            seen.add(digits)
+            best_phone = phone.strip()
+            break
+    return best_email, best_phone

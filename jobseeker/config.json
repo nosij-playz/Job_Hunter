@@ -2,7 +2,7 @@
   "llm": {
     "model": "gemma4:31b-cloud",
     "host": "http://localhost:11434",
-    "batch_screen_size": 30,
+    "batch_screen_size": 24,
     "brain_enabled": true
   },
 
@@ -19,9 +19,13 @@
     "min_score_to_apply": 80,
     "min_score_to_cold": 65,
     "max_applications_per_run": 0,
-    "quick_fit_min": 30,
-    "max_jobs_to_score": 800,
-    "min_description_length": 100
+    "quick_fit_min": 35,
+    "max_jobs_to_score": 260,
+    "min_description_length": 120,
+    "max_jobs_to_score_fast": 160,
+    "quick_fit_min_fast": 42,
+    "min_description_length_fast": 140,
+    "batch_screen_size_fast": 16
   },
 
   "auto_apply": false,
